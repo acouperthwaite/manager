@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, Text} from 'react-native';
 import {connect} from 'react-redux';
 import {emailChanged, passwordChanged, loginUser} from '../actions'
-import {Card, CardSection, Input, Button} from './common';
+import {Card, CardSection, Input, Button, Spinner} from './common';
 
 
 class LoginForm extends Component {
@@ -15,6 +15,16 @@ class LoginForm extends Component {
   onButtonPress(){
     const {email, password} = this.props;
     this.props.loginUser({email,password});
+  }
+  renderButton(){
+    if (this.props.loading){
+      return <Spinner size="large" />;
+    }
+    return (
+      <Button onPress={this.onButtonPress.bind(this)}>
+        Login
+      </Button>
+    );
   }
   renderError(){
     if(this.props.error){
@@ -50,9 +60,7 @@ class LoginForm extends Component {
         </CardSection>
         {this.renderError()}
         <CardSection>
-          <Button onPress={this.onButtonPress.bind(this)}>
-            Login
-          </Button>
+          {this.renderButton()}
         </CardSection>
       </Card>
     );
@@ -67,13 +75,20 @@ const styles = {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    email: state.auth.email, //remember 'auth' is the name we gave the AuthReducer in the reducers index.js
-    password: state.auth.password,
-    error: state.auth.error
-  };
-};
+////// Refactor to be prettier
+// const mapStateToProps = state => {
+//   return {
+//     email: state.auth.email, //remember 'auth' is the name we gave the AuthReducer in the reducers index.js
+//     password: state.auth.password,
+//     error: state.auth.error,
+//     loading: state.auth.loading
+//   };
+// };
+
+const mapStateToProps = ({auth}) => {
+  const {email, password, error, loading } = auth;
+  return { email, password, error, loading};
+}
 
 export default connect(mapStateToProps,{
     emailChanged, passwordChanged, loginUser
