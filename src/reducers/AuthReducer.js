@@ -15,7 +15,7 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-  console.log(action);
+  //console.log(action);
   switch (action.type){
     case EMAIL_CHANGED:
       return { ...state, email: action.payload }; //create a new object with all properties of state, then add email property with payload- if email property exists overwrite it
